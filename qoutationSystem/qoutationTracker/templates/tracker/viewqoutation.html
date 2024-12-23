@@ -1,0 +1,981 @@
+{% extends 'tracker/base.html' %}
+{% block title %}
+Quotation Tracker
+{% endblock %}
+{% block content %}
+
+<div class="card m-l-10 m-r-10 m-t-10 m-b-10" >
+  <div class="card-header" >
+    <h2>Qoutation History </h2>
+  <h2> Quotation # {{qout.Quot_No}}/{{qout.id}}-0{{qout.Max_Rev_No}}</h2>
+<table>
+      <tbody>
+        <tr>
+          <td><h3> Status: {{qout.Quotation_Status}}</h3></td>
+        </tr>
+        <tr>
+          <td><h3> Comments: {{qout.Comments_Remarks}}</h3></td>
+        </tr>
+      </tbody>
+    </table>
+
+          {% if has_roles is True %}
+    <a type="button" class="btn btn-blue-grey" href="{% url 'superinbox' %}">Cancel</a>
+    {% else %}
+      <a type="button" class="btn btn-blue-grey" href="{% url 'inbox' %}">Cancel</a>
+      {% endif %}
+  </div>
+  <div class="card-body" >
+  <div class="container">
+    <div class="row">
+  <div>
+        <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+			  		<div class="card-header">
+			    		Quotation Information
+			 		</div>
+			 	  <div class="card-body">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Qoutation #</label>
+                </td>
+                <td>
+                                    <label class="h4-responsive"> {{qout.Quot_No}}/{{qout.id}}  </label>
+                  
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Policy #</label>
+                </td>
+                <td>
+                                    <label class="h4-responsive"> {{qout.policy_no}}  </label>
+                  
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Revision No</label>
+                </td>
+                <td>
+                  
+                                    <label class="h4-responsive"> {{qout.Rev_No}}  </label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Policy Type</label>
+                </td>
+                <td>
+                                    <label class="h4-responsive"> {{qout.Policy_Type}}  </label>
+                
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 
+               <label class="h4-responsive" >Sub Policy Type</label>
+                </td>
+                <td>
+                  <label class="h4-responsive"> {{qout.Sub_Policy_Type}}  </label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class="h4-responsive">Branch</label>
+                </td>
+                <td>
+                 
+                                    <label class="h4-responsive"> {{qout.Branch}}  </label>
+                                    
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  
+                  <label class="h4-responsive">Status</label>
+                </td>
+                <td>
+                 
+                                    <label class="h4-responsive">{{qout.Quotation_Status}}</label>
+                  
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class = "h4-responsive" > Quotation Date </label>
+                </td>
+                <td>
+                  
+                        <label class="h4-responsive"> {{qout.Quotation_Date}}  </label>
+                  </td>
+              </tr>
+
+              <tr>
+                <td>
+
+              <label class="h4-responsive" >Salesman Name</label>
+                </td>
+                <td>
+                  <label class="font-weight-normal h4-responsive"> {{qout.Name_of_Salesman}}  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Name of Underwriter</label>
+                </td>
+                <td>
+
+                 
+                            <label class="font-weight-normal h4-responsive">{{ qout.Name_of_Underwriter}}</label>
+                          
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Name of Policy Admin</label>
+                </td>
+                <td>
+
+                 
+                            <label class="font-weight-normal h4-responsive">{{ qout.Name_of_Policy_Admin}}</label>
+                          
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  
+                 <label class="h4-responsive" >Inception Date</label>
+                </td>
+                <td>
+                   <label class="h4-responsive"> {{qout.Inception_Date}}  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+		     	 </div>
+       
+    <br>
+
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+  					<div class="card-header">
+    					Customer Contact Information
+  					</div>
+  					<div class="card-body">
+              <table>
+            <tbody>
+              
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Type of Producer</label>
+                </td>
+                <td>
+                   <label class="h4-responsive">{{ qout.Type_of_Producer }}</label>
+                </td>
+              </tr>
+
+               {% if qout.Type_of_Producer.id == 2 %}
+              <tr>
+                <td>
+
+               <label class="h4-responsive" >Broker</label>
+                </td>
+
+                <td>
+                                    {{ qout.broker}}
+
+                </td>
+              </tr>
+              {% elif qout.Type_of_Producer.id == 4 %}
+              <tr>
+                <td>
+
+               <label class="h4-responsive" >POS</label>
+                </td>
+                <td>
+                            {{ qout.pos }}
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+               <label class="h4-responsive">POS Location</label>
+                </td>
+                <td>
+                            {{ qout.pos_location}}
+
+                </td>
+              </tr>
+              {% endif %}
+
+
+              <tr>
+                <td>
+               <label class="h4-responsive" >CR No.</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.CR_No}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+               <label class="h4-responsive" >Client Name</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Client_Name}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Client Contact Person</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Client_Contact_Person }}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Client Contact Email</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Client_Contact_Email }}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                
+                <label class="h4-responsive" >Client Contact Phone</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Client_Contact_Phone}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                
+                <label class="h4-responsive" >Enterprise no. of employees </label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Company_size}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  
+               <label class="h4-responsive" >Incumbent Insurer</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" > {{ qout.Current_Insured}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+               <label class="h4-responsive" >Prior Year Insurer</label>
+                </td>
+                <td>
+                <label class="h4-responsive" >  {{ qout.Prior_Year_Insured}}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+               <label class="h4-responsive" >Prior Two-Year Insurer</label>
+                </td>
+                <td>
+                 <label class="h4-responsive"> {{ qout.Prior_Two_Year_Insured}}
+                </td>
+              </tr>
+
+              {% if qout.Policy_Type.id == 1 or qout.Policy_Type.id == 2 %}
+              <tr>
+                <td>
+                  {% if qout.Policy_Type.id == 1  %}
+               <label class="h4-responsive" >Quotation No. of Vehicles</label>
+               {% else %}
+               <label class="h4-responsive" >Quotation No. of Lives</label>
+               {% endif %}
+                </td>
+                <td>
+               <label class="h4-responsive" >   {{ qout.No_of_Lives_or_vehicle}} </label>
+                </td>
+              </tr>
+              {% endif %}
+              <tr>
+                <td>
+                <label class="h4-responsive" >Client Target Premium  </label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Client_Target }} </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+
+  					</div>
+				</div>
+<div class="card m-t-10 m-l-10 m-r-10 m-b-10" >
+            <div class="card-header">
+              Comments And Remarks
+            </div>
+            <div class="card-body">
+        <table>
+          <tbody>
+            <tr>
+                <td>
+                  
+                <label class="h4-responsive" >Comments Remarks</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Comments_Remarks }}</label>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+
+ {% if qout.Policy_Type.id == 1 or qout.Policy_Type.id == 2 %}
+
+      <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+  
+            <div class="card-header">
+                Quotation Technicial Information
+            </div>
+            <div class="card-body">
+                 <table>
+            <tbody>
+             
+
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Final Total Premium</label>
+                </td>
+
+                <td>
+                        
+                        <label class="h4-responsive" > {{ qout.Final_Premium}}</label>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Total Insured Member</label>
+                </td>
+
+                <td>
+                        <label class="h4-responsive" > {{ qout.No_of_Member}}</label>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Average Rate Per Member Per Year (PPPY)</label>
+                </td>
+                <td>
+                 <label  class=" h4-responsive" > {{ qout.PPPY}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Commission</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Commission}}%</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Loading</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Loading}}%</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Loading Discount</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Loading_Discount}}%</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Claim Discount</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Claim_Discount }}%</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Credibility Factor</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Credibility_Factor}}%</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Estimated Premium</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Estimated_Premium}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Sum Insured</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Sum_Insured}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Risk Premium</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Risk_Premium}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Average_Rate_per_vehicle_member</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Average_Rate_per_vehicle_member}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Average Risk Rate per member </label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Average_Risk_Rate_per_member}} </label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Book rate</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Book_rate }}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Experience rate</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Experience_rate}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Quote to Client Date</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Quote_to_Client_Date }}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >TAT</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.TAT}} days</label>
+                </td>
+              </tr>
+             <tr>
+                <td>
+                 <label class="h4-responsive" >Revised TAT</label>
+                </td>
+                <td>
+                                   <label class="h4-responsive">  {{ qout.Rev_TAT }} days </label>
+
+                </td>
+              </tr>
+              
+            </tbody>
+
+          </table>
+            </div>
+        </div>
+
+{% else %}
+        
+      <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+  
+            <div class="card-header">
+                Quotation Technicial Information
+            </div>
+            <div class="card-body">
+                 <table>
+            <tbody>
+              
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Final Total Premium</label>
+                </td>
+
+                <td>
+                        
+                        <label class="h4-responsive" > {{ qout.Final_Premium}}%</label>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class="h4-responsive" >Total Insured Member</label>
+                </td>
+
+                <td>
+                        <label class="h4-responsive" > {{ qout.No_of_Member}}%</label>
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Average Rate Per Member Per Year (PPPY)</label>
+                </td>
+                <td>
+                 <label  class="font-weight-normal h4-responsive" > {{ qout.PPPY}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Commission</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Commission}}%</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Loading</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Loading}}%</label>
+                </td>
+              </tr>
+
+            
+
+              <tr>
+                <td>
+                <label class="h4-responsive" >Claim Discount</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Claim_Discount }}%</label>
+                </td>
+              </tr>
+
+            
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Estimated Premium</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Estimated_Premium}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Sum Insured</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Sum_Insured}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Risk Premium</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Risk_Premium}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Deductible </label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Deductible}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Aggregate Limit </label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Aggregate_Limit}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Anyone Occurrence</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Anyone_Occurrence}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Book rate</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Book_rate }}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Experience rate</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Experience_rate}}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Quote to Client Date</label>
+                </td>
+                <td>
+                  <label class="h4-responsive" >{{ qout.Quote_to_Client_Date }}</label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >TAT</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.TAT}} days</label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Revised TAT</label>
+                </td>
+                <td>
+                                   <label class="h4-responsive">  {{ qout.Rev_TAT }} days </label>
+
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+            </div>
+        </div>
+
+        {% endif %}
+
+ <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+				  	<div class="card-header">
+				    		Quotation Claims Analysis Information
+            </div>
+  					<div class="card-body">
+                 <table>
+            <tbody>
+
+              <tr>
+                <td>
+
+                 <label class="h4-responsive" >Commission_Claim</label>
+                </td>
+                <td>
+                  {{ qout.Commission_Claim }}
+                </td>
+                <td>
+                  %
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+
+                <label class="h4-responsive" >Extrapolated_claims</label>
+                </td>
+                <td>
+                  {{ qout.Extrapolated_claims }}
+                </td>
+
+              </tr>
+
+              <tr>
+                <td>
+
+                <label class="h4-responsive" >Average claims per person per months</label>
+                </td>
+                <td>
+                  {{ qout.Average_claims_per_person_per_months }}
+                </td>
+
+              </tr>
+
+              <tr>
+                <td>
+
+                <label class="h4-responsive" > Average claims per person per year</label>
+                </td>
+                <td>
+                  {{ qout.Average_claims_per_person_per_year }}
+                </td>
+
+              </tr>
+
+              <tr>
+                <td>
+
+                 <label class="h4-responsive" > Provider discount</label>
+                </td>
+                <td>
+                  {{ qout.Provider_discount }}
+                </td>
+
+              </tr>
+
+              <tr>
+                <td>
+
+                 <label class="h4-responsive" >Trend</label>
+                </td>
+                <td>
+                  {{ qout.Trend }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+
+                 <label class="h4-responsive" >Additional_factor</label>
+                </td>
+                <td>
+                  {{ qout.Additional_factor }}
+                </td>
+
+              </tr>
+
+              <tr>
+                <td>
+
+                 <label class="h4-responsive" >Admin_Loading</label>
+                </td>
+                <td>
+                  {{ qout.Admin_Loading }}
+                </td>
+                  <td>
+                  %
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+
+                 <label class="h4-responsive" > Total Loading </label>
+                </td>
+                <td>
+                  {{ qout.Total_Loading }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+
+                  <label class="h4-responsive" > Recommended Premium </label>
+                </td>
+                <td>
+                  {{ qout.Recommended_Premium }}
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+  					</div>
+				</div>
+
+<div >
+  
+      <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+            <div class="card-header">
+              Attachments Info
+            </div>
+            <div class="card-body">
+              <table>
+            <tbody>
+              {% comment %}
+              <tr>
+                <td>
+                <label class="h4-responsive" >Data completion date</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Data_completion_date }} </label>
+                </td>
+              </tr>
+              {% endcomment %}
+              <tr>
+                <td>
+                <label class="h4-responsive" >Documents Received</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Documents_Received}} </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Name of pending documents</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Name_of_pending_documents }} </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Date of receipt of complete documents</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Date_of_receipt_of_complete_documents }}</label>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+            </div>
+        </div>
+				        <br>
+
+              <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+                 <div class="card-header">
+              Upload Attachments 
+            </div>
+            <div class="card-body">
+              <table>
+            <tbody>
+               {% for attach in attachment %}
+              <tr>
+
+                <td>
+
+                <label class="h4-responsive" >{{attach.attachment}}</label>
+                </td>
+                <td>
+                  {% if attach.attachment_path == "" %}
+                      <label>Not Available</label>
+                  {% else %}
+                      <a type="button" class="btn btn-blue-grey" href="{% url 'download' attach.id %}" Download>Download </a> 
+                  {% endif %}                    </td>
+              </tr>
+               {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    		<br>
+
+
+      <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+  	<div class="card-header">
+    					Reinsurnce Information
+  					</div>
+  					<div class="card-body">
+
+               <table>
+            <tbody>
+              <tr>
+                <td>
+               <label class="h4-responsive" > Reinsurance Approval Request</label>
+                </td>
+                <td>
+                <label class="h4-responsive" >  {{ qout.Reinsurance_Approval_Request }} </label>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+               <label class="h4-responsive" >Reinsurance Request Date</label>
+                </td>
+                <td>
+                <label class="h4-responsive" >  {{ qout.Reinsurance_Request_Date}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                <label class="h4-responsive" >Reinsurance Received Approval Date</label>
+                </td>
+                <td>
+                 <label class="h4-responsive" > {{ qout.Reinsurance_Received_Approval_Date }}
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+  					</div>
+				</div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %} 

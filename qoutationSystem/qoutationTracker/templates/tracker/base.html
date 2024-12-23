@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %} {% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+
+{% load static %}
+
+    <link rel="icon" type="image/png" href="{% static 'tracker/images/icons/GU_LOGO.ico' %}"/>
+
+  <link rel="stylesheet" href="{% static 'tracker/css/fontawesome-all.css' %} "> 
+  <link rel="stylesheet" type="text/css" href="{% static 'tracker/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'tracker/css/mdb.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'tracker/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'tracker/css/main.css' %}">
+<!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="{% static 'tracker/css/datatables.min.css' %}">
+
+
+
+<link rel="stylesheet" href="{% static 'tracker/css/font-awesome.min.css' %}">
+<link rel="stylesheet" href="{% static 'tracker/css/bootstrap-datepicker3.css' %}"/>
+<style type="text/css">
+  
+  .disabledbutton {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+td {
+  padding: 5px;
+
+}
+
+.errorlist
+    {
+        color: red;
+    }
+
+.enabledClick{
+    pointer-events: auto;
+
+}
+  
+</style>
+</head>
+<body class="limiter" style="background-color: #e9faff">
+	<main >
+{% block content %}
+{% endblock %}
+</main>
+    <script src="{% static 'tracker/js/jquery.js' %}"></script>
+    <script src="{% static 'tracker/js/jquery.min.js' %}"></script>
+    <script src="{% static 'tracker/js/jquery-ui.js' %}"></script>
+    <script src="{% static 'tracker/js/popper.min.js' %}"></script>
+    <script src="{% static 'tracker/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'tracker/js/mdb.min.js' %}"></script>
+    <script src="{% static 'tracker/js/datatables.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'tracker/js/bootstrap-datepicker.min.js' %} "></script>
+    <script type="text/javascript">
+
+                        // $(document).ready(function($) {
+                        //   $('.clickable').click(function() {
+                        //     window.location = $(this).data("href");
+                        //    });
+                        // });
+                        var today = new Date();
+  $(function() {
+    $( ".datepicker" ).datepicker({
+      minDate: 0,
+      autoclose: true,
+      startDate:today,
+
+    });
+  });
+
+  // FORM_RULES = {
+  // $('#status-select').change(function(){
+  //   if($(this).val() == 2){
+  //          $('form').validate({
+  //       rules: { '<textarea name="Comments_Remarks" cols="40" rows="10" maxlength="256" id="id_Comments_Remarks"></textarea>' : 'required'}
+  //   });  
+  //   }
+
+
+
+
+  // });
+
+                        jQuery(document).ready(function($) {
+    $('.clickable').on('click', function() {
+        window.location = $(this).data("href");
+
+    });
+});
+
+
+
+function statusChanged(){
+
+  var status = document.getElementById("id_Quotation_Status").value;
+  var comment = document.getElementById("id_Comments_Remarks");
+  var error = document.getElementById("errors_comments_Remarks");
+  //var statusValue = status.value;
+  console.log(status);
+  if (status == 9 || status == 2 || status == 6 || status == 5){
+
+    comment.required = true;
+    error.innerHTML = "This Field is required"
+
+  }
+  else{
+    comment.required = false;
+    error.innerHTML = ""
+  }
+
+
+}
+
+
+function statusPolicyChanged(){
+
+  var status = document.getElementById("id_Quotation_Status").value;
+  var policy_no = document.getElementById("id_policy_no");
+  var Final_Premium = document.getElementById("id_Final_Premium");
+  var No_of_Member= document.getElementById("id_No_of_Member");
+
+  var error_policy = document.getElementById("errors_policy_no");
+    var error_Final_Premium = document.getElementById("errors_Final_Premium");
+  var error_No_of_Member = document.getElementById("errors_No_of_Member");
+  //var statusValue = status.value;
+  console.log(status);
+  if (status == 8 ){
+
+    policy_no.required = true;
+    Final_Premium.required = true;
+    No_of_Member.required = true;
+    error_policy.innerHTML = "This Field is required"
+    error_Final_Premium.innerHTML = "This Field is required"
+    error_No_of_Member.innerHTML = "This Field is required"
+
+  }
+  else{
+    policy_no.required = false;
+    Final_Premium.required = false;
+    No_of_Member.required = false;
+    error.innerHTML = ""
+    error_Final_Premium.innerHTML = ""
+    error_No_of_Member.innerHTML = ""
+  }
+
+
+}
+
+
+function receivedChanged(){
+  var received = document.getElementById("id_Documents_Received").value;
+  var pendingDoc = document.getElementById("id_Name_of_pending_documents");
+  if (received == 'true' ){
+    document.getElementById("id_Name_of_pending_documents").disabled = true;
+
+  }
+  else {
+    document.getElementById("id_Name_of_pending_documents").disabled = false;
+
+
+  }
+
+}
+
+
+
+                                        $(document).ready(function () {
+                                                $('#dataTab').DataTable();
+                                                $('.dataTables_length').addClass('bs-select');
+                                                });
+
+                                                $(document).ready(function () {
+                                                $('#dataTab1').DataTable();
+                                                $('.dataTables_length').addClass('bs-select');
+                                                });
+
+function changeUnderwriter(p,event) {
+
+      var changeBtn = document.getElementById("changeButton"+p);
+      if (changeBtn.innerText === "Change"){
+      console.log("inside Change");
+            changeBtn.innerText = "Cancel";
+      }
+      else{
+            console.log("inside Cancel");
+
+           changeBtn.innerText = "Change";
+      }
+      var x = document.getElementById("changeAssigned"+p);
+      if (x.style.display === "none") {
+            changeBtn.style.display = "none";
+            x.style.display = "block";
+      } else {
+        x.style.display = "none";
+        changeBtn.style.display = "none";
+  }
+  event.stopPropagation();
+
+}
+
+function stopClick(event){
+
+  event.stopPropagation();
+
+
+}
+
+
+
+</script>
+
+
+    
+</body>
+</html>

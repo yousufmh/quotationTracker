@@ -1,0 +1,713 @@
+{% extends 'tracker/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+Quotation Tracker
+{% endblock %}
+{% block content %}
+
+{% if status == 'new' %}
+  <form action="{% url 'newquotation' policy_type.id %}" name="Qform" method="post" enctype="multipart/form-data">
+{% else %}
+  <form action="{% url 'salesqoutation' qout.id %}" method="post" enctype="multipart/form-data">
+{% endif %}
+    {% csrf_token %}
+  
+<div class="card m-l-10 m-r-10 m-t-10 m-b-10" >
+  <div class="card-header" >
+    {% if status == 'new' %}
+    <h2>New Request </h2>
+    {% else %}
+    <h2> Quotation # {{qout.Quot_No}}/{{qout.id}} </h2>
+    <table>
+      <tbody>
+        <tr>
+          <td><h3> Status: {{qout.Quotation_Status}}</h3></td>
+        </tr>
+        <tr>
+          <td><h3> Comments: {{qout.Comments_Remarks}}</h3></td>
+        </tr>
+      </tbody>
+    </table>
+    {% endif %}
+    <input type="submit" class="btn btn-cyan" value="submit" >
+    {% if has_roles is True %}
+    <a type="button" class="btn btn-blue-grey" href="{% url 'superinbox' %}">Cancel</a>
+    {% else %}
+      <a type="button" class="btn btn-blue-grey" href="{% url 'inbox' %}">Cancel</a>
+      {% endif %}
+
+    <a class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown"
+  aria-haspopup="true" aria-expanded="false">History</a>
+
+<div class="dropdown-menu">
+
+   {% for his_qout in history %}
+  <a class="dropdown-item" href="{% url 'history' his_qout.id %}">{{forloop.counter}}</a>
+  {% endfor %}
+</div>
+    {{ form.non_field_errors }}
+
+  </div>
+  <div class="card-body" >
+  <div >
+    <div class="row">
+  <div>
+        <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+			  		<div class="card-header">
+			    		Quotation Information
+			 		</div>
+			 	  <div class="card-body">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  {{ form.Quot_No.errors }}
+                  <label class="h4-responsive" for="{{ form.Quot_No.id_for_label }}">Qoutation #</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                                      <label class="font-weight-normal h4-responsive">  </label>
+                  {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{qout.Quot_No}}/{{qout.id}}  </label>
+                  {% endif %}
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Revision No</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                                      <label class="font-weight-normal h4-responsive"> 0 </label>
+                  {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{qout.Max_Rev_No}}  </label>
+                  {% endif %}                
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Policy_Type.errors }}
+                 <label class="h4-responsive" >Policy Type</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                                      <label class="font-weight-normal h4-responsive"> {{policy_type}} </label>
+                  {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{qout.Policy_Type}}  </label>
+                  {% endif %} 
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Sub_Policy_Type.errors }}
+               <label class="font-weight-normal h4-responsive" for="   {{ form.Sub_Policy_Type.id_for_label }}">{{form.Sub_Policy_Type.label}}</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                  {{ form.Sub_Policy_Type|add_class:" form-control " }}
+                  {% elif qout.Quotation_Status.id == 2 %}
+                  {{ form.Sub_Policy_Type|add_class:" form-control " }}
+                  {% else %}
+                  {{ form.Sub_Policy_Type|add_class:" form-control disabledbutton" }}
+                  {% endif %}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Branch.errors }}
+                  <label class="font-weight-normal h4-responsive" for="{{ form.Branch.id_for_label }}">Branch</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                    {% if has_roles is True %}
+                                    <label class=" font-weight-normal h4-responsive"> {{user_current_role.location}} </label>
+                                   {% else %}
+                                    <label class=" font-weight-normal h4-responsive"> {{user.location}} </label>
+                    {% endif %}
+                  {% else %}
+                                    <label class=" font-weight-normal h4-responsive"> {{qout.Branch}}  </label>
+                  {% endif %} 
+                                    
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Quotation_Status.errors }}
+                  <label class="col-form-label-lg" for="{{ form.Quotation_Status.id_for_label }}">{{form.Quotation_Status.label}}</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                                    <label class=" font-weight-normal h4-responsive" > New </label>
+                  {% else %}
+                            {{ form.Quotation_Status|add_class:"form-control "|attr:"onchange:statusChanged()"}}        
+          {% endif %} 
+                  
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <label class = "h4-responsive" > Quotation Date </label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                                    <label class="font-weight-normal h4-responsive">  </label>
+                  {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{qout.Quotation_Date}}  </label>
+                  {% endif %}                 </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Inception_Date.errors }}
+                 <label class="h4-responsive" for=" {{ form.Inception_Date.id_for_label }}">{{form.Inception_Date.label}}</label>
+                </td>
+                <td>
+                  {% if status == 'new' %}
+                  {{ form.Inception_Date|add_class:" datepicker form-control" }}
+                  {% elif qout.Quotation_Status.id == 2 %}
+                  {{ form.Inception_Date|add_class:" datepicker form-control" }}
+                  {% else %}
+                  {{ form.Inception_Date|add_class:" datepicker form-control disabledbutton" }}
+                  {% endif %}
+
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+</div>
+		     	 </div>
+       
+    <br>
+
+{% if status == 'new' %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+{% elif not qout.Quotation_Status.id == 2 %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10 disabledbutton" style="display: inline-block;">
+{% else %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10 " style="display: inline-block;">
+{% endif %}
+
+
+  					<div class="card-header">
+    					Customer Contact Information
+  					</div>
+  					<div class="card-body">
+              <table>
+            <tbody>
+              <tr>
+                <td>
+
+              <label class="h4-responsive" >Salesman Name</label>
+                </td>
+                <td>
+                    {{ form.Name_of_Salesman|add_class:" form-control " }}
+                   {% if status == 'new' %}
+                                    <label class="font-weight-normal h4-responsive"> {{user}} </label>
+                  {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{qout.Name_of_Salesman}}  </label>
+                  {% endif %}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                <label class="h4-responsive" > Type of Producer </label>
+                </td>
+                <td>
+                                        {{ form.Type_of_Producer|add_class:" form-control " }}
+                  {% if status == 'new' %}
+                    {% if has_roles is True %}
+                                    <label class="font-weight-normal h4-responsive"> {{user_current_role.Type_of_Producer}} </label>
+                    {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{user.Type_of_Producer}} </label>
+
+                    {% endif %}
+                    {% else %}
+                                    <label class="font-weight-normal h4-responsive"> {{qout.Type_of_Producer}}  </label>
+                  {% endif %}
+                </td>
+
+              </tr>
+              {% if has_roles is True %}
+              {% if user_current_role.Type_of_Producer.id == 2 %}
+              <tr>
+                <td>
+                  {{ form.broker.errors }}
+               <label class="h4-responsive" for="{{ form.broker.id_for_label }}">{{form.broker.label}}</label>
+                </td>
+
+                <td>
+                                    {{ form.broker|add_class:" form-control " }}
+
+                </td>
+              </tr>
+              {% elif user_current_role.Type_of_Producer.id == 4 %}
+              <tr>
+                <td>
+                  {{ form.pos.errors }}
+               <label class="h4-responsive" for="   {{ form.pos.id_for_label }}">{{form.pos.label}}</label>
+                </td>
+                <td>
+                            {{ form.pos|add_class:" form-control " }}
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.pos_location.errors }}
+               <label class="h4-responsive" for="   {{ form.pos_location.id_for_label }}">{{form.pos_location.label}}</label>
+                </td>
+                <td>
+                            {{ form.pos_location|add_class:" form-control " }}
+
+                </td>
+              </tr>
+              {% endif %}
+              {% else %}
+               {% if user.Type_of_Producer.id == 2 %}
+              <tr>
+                <td>
+                  {{ form.broker.errors }}
+               <label class="h4-responsive" for="   {{ form.broker.id_for_label }}">{{form.broker.label}}</label>
+                </td>
+
+                <td>
+
+                                    {{ form.broker|add_class:" form-control " }}
+
+                </td>
+              </tr>
+              {% elif user.Type_of_Producer.id == 4 %}
+              <tr>
+                <td>
+                  {{ form.pos.errors }}
+               <label class="h4-responsive" for="   {{ form.pos.id_for_label }}">{{form.pos.label}}</label>
+                </td>
+                <td>
+                            {{ form.pos|add_class:" form-control " }}
+
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.pos_location.errors }}
+               <label class="h4-responsive" for="   {{ form.pos_location.id_for_label }}">{{form.pos_location.label}}</label>
+                </td>
+                <td>
+                            {{ form.pos_location|add_class:" form-control " }}
+
+                </td>
+              </tr>
+              {% endif %}
+              {% endif %}
+
+              <tr>
+                <td>
+                  {{ form.CR_No.errors }}
+               <label class="h4-responsive" for="   {{ form.CR_No.id_for_label }}">{{form.CR_No.label}}</label>
+                </td>
+                <td>
+                  {{ form.CR_No|add_class:" form-control " }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Client_Name.errors }}
+               <label class="h4-responsive" for="   {{ form.Client_Name.id_for_label }}">{{form.Client_Name.label}}</label>
+                </td>
+                <td>
+                  {{ form.Client_Name|add_class:" form-control " }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Client_Contact_Person.errors }}
+                <label class="h4-responsive" for="  {{ form.Client_Contact_Person.id_for_label }}">{{form.Client_Contact_Person.label}}</label>
+                </td>
+                <td>
+                  {{ form.Client_Contact_Person|add_class:" form-control " }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Client_Contact_Email.errors }}
+                <label class="h4-responsive" for="  {{ form.Client_Contact_Email.id_for_label }}">{{form.Client_Contact_Email.label}}</label>
+                </td>
+                <td>
+                  {{ form.Client_Contact_Email|add_class:" form-control " }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Client_Contact_Phone.errors }}
+                <label class="h4-responsive" for="  {{ form.Client_Contact_Phone.id_for_label }}">{{form.Client_Contact_Phone.label}}</label>
+                </td>
+                <td>
+                  {{ form.Client_Contact_Phone|add_class:" form-control " }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{ form.Company_size.errors }}
+                <label class="h4-responsive" for="  {{ form.Company_size.id_for_label }}"> Enterprise No. of Employees  </label>
+                </td>
+                <td>
+                  {{ form.Company_size|add_class:" form-control " }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{ form.Current_Insured.errors }}
+               <label class="h4-responsive" for="   {{ form.Current_Insured.id_for_label }}">Incumbent Insurer</label>
+                </td>
+                <td>
+                  {{ form.Current_Insured|add_class:" form-control " }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Prior_Year_Insured.errors }}
+               <label class="h4-responsive" for="   {{ form.Prior_Year_Insured.id_for_label }}">Prior Year Insurer</label>
+                </td>
+                <td>
+                  {{ form.Prior_Year_Insured|add_class:" form-control " }}
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  {{ form.Prior_Two_Year_Insured.errors }}
+               <label class="h4-responsive" for="   {{ form.Prior_Two_Year_Insured.id_for_label }}">Prior Two-Year Insurer</label>
+                </td>
+                <td>
+                  {{ form.Prior_Two_Year_Insured|add_class:" form-control " }}
+                </td>
+              </tr>
+              {% if policy_type.id == 1 or policy_type.id == 2 %}
+              <tr>
+                <td>
+                  {{ form.No_of_Lives_or_vehicle.errors }}
+                  {% if policy_type.id == 1  %}
+               <label class="h4-responsive" for="   {{ form.No_of_Lives_or_vehicle.id_for_label }}">Quotation No. of Vehicles</label>
+               {% else %}
+               <label class="h4-responsive" for="   {{ form.No_of_Lives_or_vehicle.id_for_label }}">Quotation No. of Lives</label>
+               {% endif %}
+                </td>
+                <td>
+                  {{ form.No_of_Lives_or_vehicle|add_class:" form-control " }}
+                </td>
+              </tr>
+              {% endif %}
+
+              <tr>
+                <td>
+                  {{ form.Client_Target.errors }}
+                <label class="h4-responsive" for="  {{ form.Client_Target.id_for_label }}">Client Target Premium </label>
+                </td>
+                <td>
+                  {{ form.Client_Target|add_class:" form-control " }}
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+
+
+  					</div>
+				</div>
+<div class="card m-t-10 m-l-10 m-r-10 m-b-10" >
+            <div class="card-header">
+                            Comments And Remarks
+            </div>
+            <div class="card-body">
+        <table>
+          <tbody>
+            <tr>
+                                                <label id="errors_comments_Remarks" style="color: red;"></label>
+
+                <td>
+                  {{ form.Comments_Remarks.errors }}
+                <label class="h4-responsive" for="  {{ form.Comments_Remarks.id_for_label }}">{{form.Comments_Remarks.label}}</label>
+                </td>
+                <td>
+                  {{ form.Comments_Remarks|add_class:" form-control " }}
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+     {% if policy_type.id == 1 or policy_type.id == 2 %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+				  	<div class="card-header">
+				    		Quotation Technicial Information
+            </div>
+  					<div class="card-body">
+                 <table>
+            <tbody>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Name of Underwriter</label>
+                </td>
+                <td>
+
+                          {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Name_of_Underwriter}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+
+
+            <tr>
+                <td>
+                  {{ form.Commission.errors }}
+                 <label class="h4-responsive" for=" {{ form.Commission.id_for_label }}">{{form.Commission.label}}</label>
+                </td>
+                <td>
+                  {{ form.Commission|add_class:" form-control " }}
+                </td>
+                <td>
+                  %
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Estimated Premium</label>
+                </td>
+                <td>
+                  {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Estimated_Premium}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+
+              
+            </tbody>
+
+          </table>
+  					</div>
+				</div>
+    
+{% else %}
+
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+            <div class="card-header">
+                Quotation Technicial Information
+            </div>
+            <div class="card-body">
+                 <table>
+            <tbody>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Name of Underwriter</label>
+                </td>
+                <td>
+
+                          {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Name_of_Underwriter}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+
+
+            <tr>
+                <td>
+                  {{ form.Commission.errors }}
+                 <label class="h4-responsive" for=" {{ form.Commission.id_for_label }}">{{form.Commission.label}}</label>
+                </td>
+                <td>
+                  {{ form.Commission|add_class:" form-control " }}
+                </td>
+                <td>
+                  %
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Estimated Premium</label>
+                </td>
+                <td>
+                  {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Estimated_Premium}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Deductible</label>
+                </td>
+                <td>
+                  {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Deductible}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Aggregate Limit</label>
+                </td>
+                <td>
+                  {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Aggregate_Limit}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Anyone Occurrence</label>
+                </td>
+                <td>
+                  {% if status == '' %}
+                            <label class="font-weight-normal h4-responsive">{{ qout.Anyone_Occurrence}}</label>
+                          
+                          {% endif %}
+                </td>
+              </tr>
+              
+            </tbody>
+
+          </table>
+            </div>
+        </div>
+
+{% endif %}
+
+
+<div >
+  <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+            <div class="card-header">
+              Attachments Info
+            </div>
+            <div class="card-body">
+              <table>
+            <tbody>
+              
+              <tr>
+                <td>
+                <label class="h4-responsive" >Documents Received</label>
+                </td>
+                <td>
+                 <label class="font-weight-normal h4-responsive" > {{ qout.Documents_Received}} </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Name of Pending Documents</label>
+                </td>
+                <td>
+                 <label class="font-weight-normal h4-responsive" > {{ qout.Name_of_pending_documents }} </label>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                 <label class="h4-responsive" >Date of Receipt of Complete Documents</label>
+                </td>
+                <td>
+                 <label class="font-weight-normal h4-responsive" > {{ qout.Date_of_receipt_of_complete_documents }}</label>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+            </div>
+        </div>
+                <br>
+{% if status == 'new' %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+        {% comment %}
+{% elif not qout.Quotation_Status.id == 2 %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10 disabledbutton" style="display: inline-block;">
+        {% endcomment %}
+
+{% else %}
+    <div class="card m-t-10 m-l-10 m-r-10 m-b-10 " style="display: inline-block;">
+{% endif %}
+
+                 <div class="card-header">
+              Upload Attachments 
+            </div>
+            <div class="card-body">
+              
+              <table>
+            <tbody>
+
+
+
+
+ <input type="hidden" name="attachment-TOTAL_FORMS" value="8" id="id_attachment-TOTAL_FORMS">
+ <input type="hidden" name="attachment-INITIAL_FORMS" value="0" id="id_attachment-INITIAL_FORMS">
+ <input type="hidden" name="attachment-MIN_NUM_FORMS" value="0" id="id_attachment-MIN_NUM_FORMS">
+ <input type="hidden" name="attachment-MAX_NUM_FORMS" value="8" id="id_attachment-MAX_NUM_FORMS">
+
+                 
+              {% for name, attachemnt in attachemnts %}
+                  {{ attachemnt.non_field_errors }}
+              <tr>
+                <td>
+                  {{ attachemnt.id.errors }}
+                  {{ attachemnt.id|add_class:" form-control " }}
+                </td>
+                <td>
+                  <label class="font-weight-normal h4-responsive"> {{name}}</label>
+                </td>
+                <td>
+                  {{ attachemnt.attachment_path.errors }}
+                  {{ attachemnt.attachment_path|add_class:" form-control " }}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% comment %}
+{{form}}
+
+{{attachmentsform}}
+{% endcomment %}
+</div>
+</div>
+</form>
+
+{% endblock %} 

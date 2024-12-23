@@ -1,0 +1,29 @@
+{% extends 'tracker/base.html' %}
+{% block title %}
+Quotation Tracker
+{% endblock %}
+{% block content %}
+
+<div class="text-center">
+<div class="card m-t-10 m-l-10 m-r-10 m-b-10" style="display: inline-block;">
+
+
+                 <div class="card-header">
+              Message 
+            </div>
+            <div class="card-body">
+            	{{message}}
+                {% if has_roles == True %}
+                <a class="btn btn-primary" type="button" href="{% url 'superinbox' %}" > Back to Main Page</a>
+
+                {% else %}
+                <a class="btn btn-primary" type="button" href="{% url 'inbox' %}" > Back to Main Page</a>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %} 

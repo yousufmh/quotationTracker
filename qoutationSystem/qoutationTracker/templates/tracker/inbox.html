@@ -1,0 +1,264 @@
+{% extends 'tracker/base.html' %}
+{% load widget_tweaks %}
+{% block title %}
+Quotation Tracker
+{% endblock %}
+{% block content %}
+<style type="text/css">  
+[data-href] {
+    cursor: pointer;
+}
+
+</style>
+
+<div class="m-r-50 m-b-10 m-t-50">
+	<h1 class="text-center">Quotation Tracker System </h1>
+    {% if has_roles is True %}
+  <h4> Name: {{ user.user.name }} </h4>
+   <form action="{% url 'superinbox' %}" method="post">
+    {% csrf_token %}
+    {{ roles }}
+    <input type="submit" value="change role">
+    </form>
+    {% else %}
+    <h4> Name: {{ user.name }} </h4>
+    {% endif %}
+  <h4> Role: {{user.role}} </h4>
+  <h4> Location: {{user.location}}</h4>
+	{% if user.role.id == 1 %}
+<a class="btn btn-primary dropdown-toggle mr-4" type="button" data-toggle="dropdown"
+  aria-haspopup="true" aria-expanded="false">Create Quotation for</a>
+
+<div class="dropdown-menu">
+  {% for policy in policytypes %}
+  <a class="dropdown-item" href="{% url 'newquotation' policy.id %}">{{policy}}</a>
+  {% endfor %} 
+    {% comment %}
+  <a class="dropdown-item" href="{% url 'newquotation' 2 %}">Medical</a>
+  <a class="dropdown-item" href="{% url 'newquotation' 'Marine' %}">Marine</a>
+  <a class="dropdown-item" href="{% url 'newquotation' 'General' %}">General</a>
+  {% endcomment %}
+</div>
+{% endif %}
+<a class="btn btn-primary" type="button" href="{% url 'login' %}" > Logout</a>
+</div>
+
+<div class=" card m-r-100 m-l-100 m-b-10 m-t-10">
+          <div class="card-header">
+            <label>Pending Quotation Workflow Inbox</label>
+            {% comment %}
+            <ul class="nav nav-tabs card-header-tabs">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">New</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Revisised</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" href="#">Issued</a>
+              </li>
+            </ul>
+            {% endcomment %}
+          </div>
+          <div class="card-body">
+            <table id="dataTab" class="table table-striped table-bordered btn-table" cellspacing="0" width="100%">
+  				<thead>
+				    <tr>
+                         <th class="th-sm">Quotation No.</th>
+              <th class="th-sm">Customer Name</th>
+              <th class="th-sm">Creation Date</th>
+              <th class="th-sm">Created By</th>
+              <th class="th-sm">Status</th>
+              <th class="th-sm">Underwriter Name</th>
+                {% if user.authority  %}
+                        <th class="th-sm">Change</th>
+                        {% endif %}
+
+				    
+				    </tr>
+  				</thead>
+  				<tbody>
+            {% for qout in pending_quotations %}
+
+            {% if user.role.id == 3 %}
+                 <tr class="clickable"  data-href="{% url 'issueqoutation' qout.id %}">
+            {% elif user.role.id == 2 %}
+                     {% if has_roles is True %}
+            {% if user.user.id == qout.Name_of_Underwriter.id %}
+                <tr class="clickable" data-href="{% url 'underwriterqoutation' qout.id %}">
+            {% endif %}
+                {% else %}
+                {% if user.id == qout.Name_of_Underwriter.id %}
+                <tr class="clickable" data-href="{% url 'underwriterqoutation' qout.id %}">
+                {% endif %}
+                {% endif %}
+
+
+            {% elif user.role.id == 1 %}
+                 <tr class="clickable" data-href="{% url 'salesqoutation' qout.id %}">
+
+
+            {% else %}
+            <tr>
+                 {% endif %}
+              <td>
+                {{qout.Quot_No}}/{{qout.id}}
+              </td>
+              
+              <td>
+                {{qout.Client_Name}}
+              </td>
+
+              <td>
+                {{qout.Quotation_Date}}
+              </td>
+              <td>
+                {{qout.Name_of_Salesman}}
+              </td>
+              <td>
+                {{qout.Quotation_Status.status}}
+              </td>
+               <td >
+                   {{qout.Name_of_Underwriter}}
+
+              </td>
+
+                   {% if user.authority  %}
+                     <td>
+                         <div onclick="stopClick(event)" id = "changeAssigned{{qout.id}}" style="display: none;" >
+
+                        {% if has_roles is True %}
+                        <form action="{% url 'superinbox' %}" method="post">
+                         {% else %}
+                         <form action="{% url 'inbox' %}" method="post">
+                         {% endif %}
+                            {% csrf_token %}
+                            <input type="text" value="{{qout.id}}" style="display:none;pointer-events: auto;" name="quot_id">
+                            {{ underwriter.Underwriter |add_class:"enabledClick"}}
+                            <input type="submit" value="Change" style="pointer-events: auto;">
+                        </form>
+
+                   </div>
+                   <button id="changeButton{{qout.id}}"  style="pointer-events: auto;"
+                           onclick="changeUnderwriter({{qout.id}},event)">Change</button>
+
+                    </td>
+                   {% endif %}
+
+            </tr>
+            {% endfor %}
+  				</tbody>
+				<tfoot>
+				    <tr>
+              <th class="th-sm">Quotation No.</th>
+              <th class="th-sm">Customer Name</th>
+              <th class="th-sm">Creation Date</th>
+              <th class="th-sm">Created By</th>
+              <th class="th-sm">Status</th>
+              <th class="th-sm">Underwriter Name</th>
+                        {% if user.authority  %}
+                        <th class="th-sm">Change</th>
+                        {% endif %}
+
+				    </tr>
+				</tfoot>
+			</table>	
+
+          </div>
+        </div>
+
+
+<div class=" card m-r-100 m-l-100 m-b-10 ">
+          <div class="card-header">
+            <label>Quotation Workflow Inbox</label>
+            
+          </div>
+          <div class="card-body">
+            <table id="dataTab1" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          <thead>
+            <tr>
+              <th class="th-sm">Quotation No.</th>
+              <th class="th-sm">Customer Name</th>
+              <th class="th-sm">Creation Date</th>
+              <th class="th-sm">Created By</th>
+              <th class="th-sm">Status</th>
+                              <th class="th-sm">Underwriter Name</th>
+{% if user.authority  %}
+                        <th class="th-sm">Change</th>
+                        {% endif %}
+
+            
+            </tr>
+          </thead>
+          <tbody>
+            {% for qout in quotations %}
+                 <tr class="clickable" data-href="{% url 'view_qoutation' qout.id %}">
+              <td>
+                {{qout.Quot_No}}/{{qout.id}}
+              </td>
+              
+              <td>
+                {{qout.Client_Name}}
+              </td>
+              <td>
+                {{qout.Quotation_Date}}
+              </td>
+              <td>
+                {{qout.Name_of_Salesman}}
+              </td>
+              <td>
+                {{qout.Quotation_Status.status}}
+              </td>
+               <td >
+                   {{qout.Name_of_Underwriter}}
+
+              </td>
+                       {% if user.authority  %}
+                    <td>
+                         <div onclick="stopClick(event)" id = "changeAssigned{{qout.id}}" style="display: none;" >
+
+
+                        {% if has_roles is True %}
+                        <form action="{% url 'superinbox' %}" method="post">
+                         {% else %}
+                         <form action="{% url 'inbox' %}" method="post">
+                         {% endif %}
+                            {% csrf_token %}
+                            <input type="text" value="{{qout.id}}" style="display:none;pointer-events: auto;" name="quot_id">
+                            {{ underwriter.Underwriter |add_class:"enabledClick"}}
+                            <input type="submit" value="Change" style="pointer-events: auto;">
+                        </form>
+
+                   </div>
+                   <button id="changeButton{{qout.id}}"  style="pointer-events: auto;"
+                           onclick="changeUnderwriter({{qout.id}},event)">Change</button>
+
+                    </td>
+                   {% endif %}
+
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        <tfoot>
+            <tr>
+              <th class="th-sm">Quotation No.</th>
+              <th class="th-sm">Customer Name</th>
+              <th class="th-sm">Creation Date</th>
+              <th class="th-sm">Created By</th>
+              <th class="th-sm">Status</th>
+                              <th class="th-sm">Underwriter Name</th>
+{% if user.authority  %}
+                        <th class="th-sm">Change</th>
+                        {% endif %}
+
+            </tr>
+        </tfoot>
+      </table>  
+
+          </div>
+        </div>
+
+
+
+{% endblock %} 

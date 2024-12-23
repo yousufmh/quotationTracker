@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Qoutation Tracker</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+{% load static %}
+
+    <link rel="icon" type="image/png" href="{% static 'tracker/images/icons/GU_LOGO.ico' %}"/>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'tracker/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'tracker/css/mdb.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'tracker/css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'tracker/css/main.css' %}">
+<!--===============================================================================================-->
+
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<body>
+
+	<div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
+                <form class="login100-form validate-form"  action="{% url 'validate' %}" method="post">
+                    {% csrf_token %}
+                    <span class="login100-form-title p-b-33">
+                        Qoutation Tracker
+                    </span>
+                    <div class="wrap-input100 validate-input"  >
+                        <input class="input100" type="text" name="username" placeholder="Username">
+                        <span class="focus-input100-1"></span>
+                        <span class="focus-input100-2"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" >
+                        <input class="input100" type="password" name="password" placeholder="Password" >
+                        <span class="focus-input100-1"></span>
+                        <span class="focus-input100-2"></span>
+                    </div>
+                    <div class="container-login100-form-btn m-t-20">
+                        <button   class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+                    <span class="login100-form-title p-b-33">
+                        {{message}}
+                    </span>
+                </form>
+                            <br>
+            </div>
+        </div>
+    
+    </div>
+
+    <script src="{% static 'tracker/js/jquery.min.js' %}"></script>
+    <script src="{% static 'tracker/js/popper.min.js' %}"></script>
+    <script src="{% static 'tracker/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'tracker/js/mdb.min.js' %}"></script>
+
+</body>
+</html>

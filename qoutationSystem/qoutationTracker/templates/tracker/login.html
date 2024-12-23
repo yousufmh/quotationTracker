@@ -1,0 +1,51 @@
+{% extends 'tracker/base.html' %}
+{% block title %}
+Quotation Tracker
+{% endblock %}
+{% block content %}
+
+                <form class="login100-form validate-form m-t-100"  action="{% url 'validate' %}" method="post">
+                    {% csrf_token %}
+
+
+                    <div class="login-card ">
+					    <h1>Qoutation Tracker</h1><br>
+					  <form>
+					    <input type="text" name="username" placeholder="Username">
+					    <input type="password" name="password" placeholder="Password">
+					    <input type="submit" name="login" class="login login-submit" value="login">
+					  </form>
+					  <h3>{{message}}</h3>
+					</div>
+
+                    {% comment %}
+                    <span class="login100-form-title p-b-33">
+                        Qoutation Tracker
+                    </span>
+                    <div class="wrap-input100 validate-input"  >
+                        <input class="input100" type="text" name="username" placeholder="Username">
+                        <span class="focus-input100-1"></span>
+                        <span class="focus-input100-2"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input" >
+                        <input class="input100" type="password" name="password" placeholder="Password" >
+                        <span class="focus-input100-1"></span>
+                        <span class="focus-input100-2"></span>
+                    </div>
+                    <div class="container-login100-form-btn m-t-20">
+                        <button   class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+                    <span class="login100-form-title p-b-33">
+                        {{message}}
+                    </span>
+                    {% endcomment %}
+                </form>
+              
+    
+ 
+
+
+
+{% endblock %} 
